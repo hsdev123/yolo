@@ -37,16 +37,18 @@ ALLOWED_HOSTS = []
 # Application definition
 
 
-DEFAULT_APPS = ["django.contrib.admin",
+DJANGO_APPS = ["django.contrib.admin",
                 "django.contrib.auth",
                 "django.contrib.contenttypes",
                 "django.contrib.sessions",
                 "django.contrib.messages",
                 "django.contrib.staticfiles",]
 
+PROJECT_APPS = ["api",]
+
 THIRD_PARTY_APPS = ['rest_framework',]
 
-INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -112,9 +114,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ko-kr"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Seoul"
 
 USE_I18N = True
 
@@ -132,9 +134,18 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
+    # 요청 인증에 사용되는 기본 인증 클래스를 설정함. API 뷰에 적용되는 인증 메커니즘을 정의.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+    # 권한 부여에 사용되는 기본 권한 클래스를 지정함. API 뷰에 적용되는 접근 제어 규칙을 결정.
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+
+    # API 응답의 페이지네이션에 사용되는 기본 페이지네이션 클래스를 설정함. API 결과가 페이지로 나뉘어 표시되는 방식을 제어
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
 }
